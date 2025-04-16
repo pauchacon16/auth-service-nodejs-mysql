@@ -25,7 +25,6 @@ export const register = async (req, res) => {
         // Verificar si el correo electronico ya existe.
         const [rows] = await pool.query("SELECT COUNT(*) FROM USUARIOS WHERE EMAIL = ?", [email.toLowerCase()]);
         if(rows.length === 1){
-            console.log(rows[0]);
             if(rows[0]["COUNT(*)"] > 0){
                 return res.status(400).json({ error: "El correo electrónico ya se encuentra registrado." });
             }
