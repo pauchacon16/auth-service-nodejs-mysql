@@ -1,17 +1,14 @@
 // Importar los módulos necesarios.
-const mongoose = require('mongoose');
+import mysql from "mysql2/promise";
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect('mongodb://localhost:27017/parqueDB', { // Conexión a la base de datos de mongo
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('Conexión a MongoDB exitosa');
-  } catch (error) {
-    console.error('Error al conectar a MongoDB:', error.message);
-    process.exit(1); // Salir del proceso con fallo
-  }
-};
+const pool = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "qwerty",
+  database: "delisapp",
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
 
-module.exports = connectDB;
+export default pool;

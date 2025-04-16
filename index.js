@@ -2,14 +2,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/auth');
-const connectDB = require('./config/database');
+const cors = require('cors');
 
 // Crear una instancia de la aplicación Express.
 const app = express();
-const PORT = 3000; // Definir el puerto en el que el servidor escuchará.
+const PORT = 3600; // Definir el puerto en el que el servidor escuchará.
 
-//Conectar a la base de datos mongo
-connectDB();
+app.use(cors());
 // Middleware para parsear el cuerpo de las peticiones como JSON.
 app.use(bodyParser.json());
 
