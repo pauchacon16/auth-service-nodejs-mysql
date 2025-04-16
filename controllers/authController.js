@@ -1,6 +1,7 @@
 // Importar los módulos necesarios.
 import bcrypt from "bcrypt";
 import pool from "../config/database.js";
+import { generateToken } from "../lib/token.js";
 
 // Función controladora para el registro de usuarios.
 export const register = async (req, res) => {
@@ -52,12 +53,14 @@ export const login = async (req, res) => {
 
     // Verificar si el usuario existe y si la contraseña es correcta.
     try {  
-        const [rows] = await pool.query("SELECT PASSWORD FROM USUARIOS WHERE EMAIL = ?", [email.toLowerCase()]);
+        const [rows] = await pool.query("SELECT * FROM USUARIOS WHERE EMAIL = ?", [email.toLowerCase()]);
         if(rows.length === 1){
-            const passwordDB = rows[0]["PASSWORD"];
+            const user = rows[0];
+            const passwordDB = user.password;
             const confirmPass = await bcrypt.compare(password, passwordDB)
             if(confirmPass){
-                return res.status(200).json({ message: 'Autenticación satisfactoria', token: 'simulated_token' });
+                const token = generateToken({id: user.id, username: user.email});
+                return res.status(200).json({ message: 'Autenticación satisfactoria', token: token});
             }else{
                 return res.status(401).json({error: "Error en la autenticación: credenciales inválidas."});
             }
